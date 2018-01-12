@@ -1,0 +1,7 @@
+C:\Users\Atjhoendz Armando\Documents\Visual Studio 2015\Projects\ExKeylogger\Ex-Keylogger\bin\Release\Ex-Keylogger.exe.config
+C:\Users\Atjhoendz Armando\Documents\Visual Studio 2015\Projects\ExKeylogger\Ex-Keylogger\bin\Release\Ex-Keylogger.exe
+C:\Users\Atjhoendz Armando\Documents\Visual Studio 2015\Projects\ExKeylogger\Ex-Keylogger\obj\Release\Ex_Keylogger.keylog.resources
+C:\Users\Atjhoendz Armando\Documents\Visual Studio 2015\Projects\ExKeylogger\Ex-Keylogger\obj\Release\Ex_Keylogger.Resources.resources
+C:\Users\Atjhoendz Armando\Documents\Visual Studio 2015\Projects\ExKeylogger\Ex-Keylogger\obj\Release\Ex_Keylogger.Browserr.resources
+C:\Users\Atjhoendz Armando\Documents\Visual Studio 2015\Projects\ExKeylogger\Ex-Keylogger\obj\Release\Ex-Keylogger.vbproj.GenerateResource.Cache
+C:\Users\Atjhoendz Armando\Documents\Visual Studio 2015\Projects\ExKeylogger\Ex-Keylogger\obj\Release\Ex-Keylogger.exe
